@@ -1,0 +1,1 @@
+# edot-warehouse-service
