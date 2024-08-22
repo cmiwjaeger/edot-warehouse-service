@@ -19,7 +19,7 @@ func NewWarehouseConsumer(log *logrus.Logger) *WarehouseConsumer {
 }
 
 func (c WarehouseConsumer) Consume(message *kafka.Message) error {
-	ContactEvent := new(model.Warehouse)
+	ContactEvent := new(model.WarehouseCreatedEvent)
 	if err := json.Unmarshal(message.Value, ContactEvent); err != nil {
 		c.Log.WithError(err).Error("error unmarshalling Contact event")
 		return err
