@@ -6,23 +6,24 @@ import (
 	"edot-monorepo/services/warehouse-service/internal/gateway/messaging"
 	"edot-monorepo/services/warehouse-service/internal/model"
 	"edot-monorepo/services/warehouse-service/internal/model/converter"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-type WarehouseCreateUseCase struct {
+type WarehouseUpdateUseCase struct {
 	*WarehouseBaseUseCase
-	WarehouseCreatedProducer *messaging.WarehouseProducer[model.Event]
+	WarehouseUpdateProducer *messaging.WarehouseProducer[model.Event]
 }
 
-func NewWarehouseCreateUseCase(warehouseBaseUseCase *WarehouseBaseUseCase, wareHouseProducer *messaging.WarehouseProducer[model.Event]) *WarehouseCreateUseCase {
-	return &WarehouseCreateUseCase{
-		WarehouseBaseUseCase:     warehouseBaseUseCase,
-		WarehouseCreatedProducer: wareHouseProducer,
+func NewWarehouseUpdateUseCase(warehouseBaseUseCase *WarehouseBaseUseCase, warehouseUpdateProducer *messaging.WarehouseProducer[model.Event]) *WarehouseUpdateUseCase {
+	return &WarehouseUpdateUseCase{
+		WarehouseBaseUseCase:    warehouseBaseUseCase,
+		WarehouseUpdateProducer: warehouseUpdateProducer,
 	}
 }
 
-func (c *WarehouseCreateUseCase) Exec(ctx context.Context, request *model.WarehouseCreateRequest) (*model.WarehouseResponse, error) {
+func (c *WarehouseUpdateUseCase) Exec(ctx context.Context, request *model.WarehouseUpdateRequest) (*model.WarehouseResponse, error) {
 
 	tx := c.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
@@ -34,11 +35,13 @@ func (c *WarehouseCreateUseCase) Exec(ctx context.Context, request *model.Wareho
 	}
 
 	warehouse := &entity.Warehouse{
-		Name:   request.Name,
-		Status: true,
+		ID:        request.ID,
+		Name:      request.Name,
+		Status:    true,
+		UpdatedAt: time.Now(),
 	}
 
-	if err := c.WarehouseRepository.Create(tx, warehouse); err != nil {
+	if err := c.WarehouseRepository.Update(tx, warehouse); err != nil {
 		c.Log.Warnf("Failed create warehouse to database : %+v", err)
 		return nil, fiber.ErrInternalServerError
 	}
@@ -48,8 +51,8 @@ func (c *WarehouseCreateUseCase) Exec(ctx context.Context, request *model.Wareho
 		return nil, fiber.ErrInternalServerError
 	}
 
-	event := converter.WarehouseToEvent(warehouse)
-	if err := c.WarehouseCreatedProducer.Send(event); err != nil {
+	event := converter.WarehouseToEventUpdated(warehouse)
+	if err := c.WarehouseUpdateProducer.Send(event); err != nil {
 		c.Log.WithError(err).Error("error publishing contact")
 		return nil, fiber.ErrInternalServerError
 	}

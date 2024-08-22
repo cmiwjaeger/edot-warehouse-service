@@ -6,6 +6,7 @@ import (
 	"edot-monorepo/services/warehouse-service/internal/gateway/messaging"
 	repository "edot-monorepo/services/warehouse-service/internal/repository/gorm"
 	"edot-monorepo/services/warehouse-service/internal/usecase"
+	"edot-monorepo/shared/events"
 
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/go-playground/validator/v10"
@@ -28,13 +29,15 @@ func Bootstrap(config *BootstrapConfig) {
 
 	warehouseRepository := repository.NewWarehouseRepository(config.Log)
 
-	warehouseCreatedProducer := messaging.NewWarehouseProducer("warehouse_created", config.Producer, config.Log)
+	warehouseCreatedProducer := messaging.NewWarehouseProducer[*events.WarehouseCreatedEvent]("warehouse_created", config.Producer, config.Log)
+	warehouseStatusUpdatedProducer := messaging.NewWarehouseProducer[*events.WarehouseUpdatedEvent]("warehouse_updated", config.Producer, config.Log)
 
 	warehouseBaseUseCase := usecase.NewWarehouseUseCase(config.DB, config.Log, warehouseRepository, config.Validate)
 	warehouseCreateUseCase := usecase.NewWarehouseCreateUseCase(warehouseBaseUseCase, warehouseCreatedProducer)
+	warehouseUpdateUseCase := usecase.NewWarehouseUpdateUseCase(warehouseBaseUseCase, warehouseStatusUpdatedProducer)
 	warehouseListUseCase := usecase.NewWarehouseListUseCase(warehouseBaseUseCase)
 
-	warehouseController := controller.NewWarehouseController(warehouseCreateUseCase, warehouseListUseCase, config.Log, config.Validate)
+	warehouseController := controller.NewWarehouseController(warehouseCreateUseCase, warehouseUpdateUseCase, warehouseListUseCase, config.Log, config.Validate)
 
 	routeConfig := route.RouteConfig{
 		App:                 config.App,

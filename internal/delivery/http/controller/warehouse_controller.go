@@ -13,15 +13,17 @@ import (
 
 type WarehouseController struct {
 	warehouseCreateUseCase *usecase.WarehouseCreateUseCase
+	WarehouseUpdateUseCase *usecase.WarehouseUpdateUseCase
 	warehouseListUseCase   *usecase.WarehouseListUseCase
 	Log                    *logrus.Logger
 	Validate               *validator.Validate
 }
 
-func NewWarehouseController(warehouseCreateUseCase *usecase.WarehouseCreateUseCase, warehouseListUseCase *usecase.WarehouseListUseCase, log *logrus.Logger, validate *validator.Validate) *WarehouseController {
+func NewWarehouseController(warehouseCreateUseCase *usecase.WarehouseCreateUseCase, warehouseUpdateUseCase *usecase.WarehouseUpdateUseCase, warehouseListUseCase *usecase.WarehouseListUseCase, log *logrus.Logger, validate *validator.Validate) *WarehouseController {
 	return &WarehouseController{
 		warehouseCreateUseCase: warehouseCreateUseCase,
 		warehouseListUseCase:   warehouseListUseCase,
+		WarehouseUpdateUseCase: warehouseUpdateUseCase,
 		Log:                    log,
 		Validate:               validate,
 	}
@@ -37,6 +39,24 @@ func (c *WarehouseController) Create(ctx *fiber.Ctx) error {
 	}
 
 	response, err := c.warehouseCreateUseCase.Exec(ctx.UserContext(), request)
+	if err != nil {
+		c.Log.Warnf("Failed to register user : %+v", err)
+		return err
+	}
+
+	return ctx.JSON(model.WebResponse[*model.WarehouseResponse]{Data: response})
+}
+
+func (c *WarehouseController) Update(ctx *fiber.Ctx) error {
+
+	request := new(model.WarehouseUpdateRequest)
+	err := ctx.BodyParser(request)
+	if err != nil {
+		c.Log.Warnf("Failed to parse request body : %+v", err)
+		return fiber.ErrBadRequest
+	}
+
+	response, err := c.WarehouseUpdateUseCase.Exec(ctx.UserContext(), request)
 	if err != nil {
 		c.Log.Warnf("Failed to register user : %+v", err)
 		return err
@@ -61,7 +81,6 @@ func (c *WarehouseController) List(ctx *fiber.Ctx) error {
 	return ctx.JSON(model.WebResponse[[]*model.WarehouseResponse]{
 		Data: response,
 	})
-
 }
 
 func parseQueryToModel(ctx *fiber.Ctx) (*model.WarehouseListRequest, error) {

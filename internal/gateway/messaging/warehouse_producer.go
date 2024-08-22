@@ -7,13 +7,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type WarehouseProducer struct {
-	Producer[*model.WarehouseCreatedEvent]
+type WarehouseProducer[T model.Event] struct {
+	Producer[T]
 }
 
-func NewWarehouseProducer(topic string, producer *kafka.Producer, log *logrus.Logger) *WarehouseProducer {
-	return &WarehouseProducer{
-		Producer: Producer[*model.WarehouseCreatedEvent]{
+func NewWarehouseProducer[T model.Event](topic string, producer *kafka.Producer, log *logrus.Logger) *WarehouseProducer[model.Event] {
+
+	return &WarehouseProducer[model.Event]{
+		Producer: Producer[model.Event]{
 			Producer: producer,
 			Topic:    topic,
 			Log:      log,

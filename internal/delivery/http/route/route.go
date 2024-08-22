@@ -20,6 +20,7 @@ func (c *RouteConfig) Setup() {
 func (c *RouteConfig) SetupGuestRoute() {
 	c.App.Get("/api/warehouse", c.WarehouseController.List)
 	c.App.Post("/api/warehouse", c.WarehouseController.Create)
+	c.App.Put("/api/warehouse", c.WarehouseController.Update)
 
 }
 

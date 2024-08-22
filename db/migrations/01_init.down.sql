@@ -5,9 +5,10 @@ DROP TRIGGER IF EXISTS update_products_updated_at ON products;
 DROP FUNCTION IF EXISTS update_updated_at;
 
 -- Drop the products table
-DROP TABLE IF EXISTS warehouses;
-DROP TABLE IF EXISTS products;
-DROP TABLE IF EXISTS shops;
-DROP TABLE IF EXISTS stock;
 DROP TABLE IF EXISTS shop_warehouses;
 DROP TABLE IF EXISTS warehouse_products;
+DROP TABLE IF EXISTS stock;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS shops;
+DROP TABLE IF EXISTS warehouses;
+
