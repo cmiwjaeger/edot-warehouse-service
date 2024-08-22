@@ -4,6 +4,7 @@ import (
 	"edot-monorepo/services/warehouse-service/internal/entity"
 
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
 type WarehouseRepository struct {
@@ -15,4 +16,8 @@ func NewWarehouseRepository(log *logrus.Logger) *WarehouseRepository {
 	return &WarehouseRepository{
 		Log: log,
 	}
+}
+
+func (r *WarehouseRepository) FindAll(db *gorm.DB, entity *[]entity.Warehouse) error {
+	return db.Find(entity).Error
 }

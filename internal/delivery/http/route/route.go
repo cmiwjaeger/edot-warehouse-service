@@ -18,10 +18,12 @@ func (c *RouteConfig) Setup() {
 	c.SetupAuthRoute()
 }
 func (c *RouteConfig) SetupGuestRoute() {
-	c.App.Post("/api/create", c.WarehouseController.Create)
+	c.App.Get("/api/warehouse", c.WarehouseController.List)
+	c.App.Post("/api/warehouse", c.WarehouseController.Create)
 
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
 	// c.App.Use(c.AuthMiddleware)
+
 }
