@@ -1,4 +1,5 @@
--- Drop the products table
+DROP TABLE IF EXISTS warehouse_shops;
+DROP TABLE IF EXISTS stock;
+DROP TABLE IF EXISTS shops;
 DROP TABLE IF EXISTS warehouses;
-DROP TABLE IF EXISTS warehouse_stocks;
 

@@ -16,8 +16,8 @@ CREATE TABLE shops (
 
 CREATE TABLE warehouse_shops (
     warehouse_id UUID REFERENCES warehouses(id) ON DELETE CASCADE,
-    shop_id UUID REFERENCES shops(id) ON DELETE CASCADE,
-)
+    shop_id UUID REFERENCES shops(id) ON DELETE CASCADE
+);
 
 CREATE TABLE stock (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

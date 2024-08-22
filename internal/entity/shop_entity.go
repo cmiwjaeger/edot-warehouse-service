@@ -9,7 +9,7 @@ import (
 type Shop struct {
 	ID        uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
 	Name      string    `gorm:"column:name"`
-	Status    bool      `gorm:"column:status"`
+	Address   string    `gorm:"column:address"`
 	CreatedAt time.Time `gorm:"column:created_at;type:timestamptz;default:CURRENT_TIMESTAMP"`
 	UpdatedAt time.Time `gorm:"column:updated_at;type:timestamptz;default:CURRENT_TIMESTAMP"`
 }
