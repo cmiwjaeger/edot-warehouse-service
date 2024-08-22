@@ -49,7 +49,7 @@ func (c *WarehouseCreateUseCase) Exec(ctx context.Context, request *model.Wareho
 	}
 
 	event := converter.WarehouseToEvent(warehouse)
-	if err := c.WarehouseCreatedProducer.Send(event); err != nil {
+	if err := c.WarehouseCreatedProducer.SendAsync(event); err != nil {
 		c.Log.WithError(err).Error("error publishing contact")
 		return nil, fiber.ErrInternalServerError
 	}

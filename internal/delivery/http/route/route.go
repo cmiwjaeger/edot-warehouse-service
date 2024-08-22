@@ -17,10 +17,13 @@ func (c *RouteConfig) Setup() {
 	c.SetupGuestRoute()
 	c.SetupAuthRoute()
 }
+
+const wareHouseRoute string = "/api/warehouse"
+
 func (c *RouteConfig) SetupGuestRoute() {
-	c.App.Get("/api/warehouse", c.WarehouseController.List)
-	c.App.Post("/api/warehouse", c.WarehouseController.Create)
-	c.App.Put("/api/warehouse", c.WarehouseController.Update)
+	c.App.Get(wareHouseRoute, c.WarehouseController.List)
+	c.App.Post(wareHouseRoute, c.WarehouseController.Create)
+	c.App.Put(wareHouseRoute, c.WarehouseController.Update)
 
 }
 

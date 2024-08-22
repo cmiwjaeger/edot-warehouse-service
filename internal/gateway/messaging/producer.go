@@ -18,7 +18,7 @@ func (p *Producer[T]) GetTopic() *string {
 	return &p.Topic
 }
 
-func (p *Producer[T]) Send(event T) error {
+func (p *Producer[T]) SendAsync(event T) error {
 	value, err := json.Marshal(event)
 	if err != nil {
 		p.Log.WithError(err).Error("failed to marshal event")

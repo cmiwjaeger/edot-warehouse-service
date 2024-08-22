@@ -6,13 +6,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type WarehouseRepository struct {
+type StockRepository struct {
 	Repository[entity.Warehouse]
 	Log *logrus.Logger
 }
 
-func NewWarehouseRepository(log *logrus.Logger) *WarehouseRepository {
-	return &WarehouseRepository{
+func NewStockRepository(log *logrus.Logger) *StockRepository {
+	return &StockRepository{
 		Log: log,
 	}
 }

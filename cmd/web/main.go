@@ -10,7 +10,6 @@ func main() {
 	log := config.NewLogger(viperConfig)
 	db := config.NewDatabase(viperConfig, log)
 	validate := config.NewValidator(viperConfig)
-
 	producer := config.NewKafkaProducer(viperConfig, log)
 
 	app := config.NewFiber(viperConfig)
