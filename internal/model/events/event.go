@@ -1,4 +1,4 @@
-package model
+package events
 
 type Event interface {
 	GetId() string

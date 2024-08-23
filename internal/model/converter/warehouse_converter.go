@@ -3,7 +3,7 @@ package converter
 import (
 	"edot-monorepo/services/warehouse-service/internal/entity"
 	"edot-monorepo/services/warehouse-service/internal/model"
-	"edot-monorepo/shared/events"
+	"edot-monorepo/services/warehouse-service/internal/model/events"
 )
 
 func WarehouseToResponse(item *entity.Warehouse) *model.WarehouseResponse {

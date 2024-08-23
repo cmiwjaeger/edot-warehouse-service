@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"edot-monorepo/services/warehouse-service/internal/entity"
-	"edot-monorepo/services/warehouse-service/internal/gateway/messaging"
 	"edot-monorepo/services/warehouse-service/internal/model"
 	"edot-monorepo/services/warehouse-service/internal/model/converter"
 
@@ -12,13 +11,11 @@ import (
 
 type WarehouseCreateUseCase struct {
 	*WarehouseBaseUseCase
-	WarehouseCreatedProducer *messaging.WarehouseProducer[model.Event]
 }
 
-func NewWarehouseCreateUseCase(warehouseBaseUseCase *WarehouseBaseUseCase, wareHouseProducer *messaging.WarehouseProducer[model.Event]) *WarehouseCreateUseCase {
+func NewWarehouseCreateUseCase(warehouseBaseUseCase *WarehouseBaseUseCase) *WarehouseCreateUseCase {
 	return &WarehouseCreateUseCase{
-		WarehouseBaseUseCase:     warehouseBaseUseCase,
-		WarehouseCreatedProducer: wareHouseProducer,
+		warehouseBaseUseCase,
 	}
 }
 
@@ -49,7 +46,7 @@ func (c *WarehouseCreateUseCase) Exec(ctx context.Context, request *model.Wareho
 	}
 
 	event := converter.WarehouseToEvent(warehouse)
-	if err := c.WarehouseCreatedProducer.SendAsync(event); err != nil {
+	if err = c.Producer.Produce(ctx, "shop_created", event); err != nil {
 		c.Log.WithError(err).Error("error publishing contact")
 		return nil, fiber.ErrInternalServerError
 	}

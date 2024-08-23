@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"edot-monorepo/services/warehouse-service/internal/entity"
-	"edot-monorepo/services/warehouse-service/internal/gateway/messaging"
 	"edot-monorepo/services/warehouse-service/internal/model"
 	"edot-monorepo/services/warehouse-service/internal/model/converter"
 	"time"
@@ -13,13 +12,11 @@ import (
 
 type WarehouseUpdateUseCase struct {
 	*WarehouseBaseUseCase
-	WarehouseUpdateProducer *messaging.WarehouseProducer[model.Event]
 }
 
-func NewWarehouseUpdateUseCase(warehouseBaseUseCase *WarehouseBaseUseCase, warehouseUpdateProducer *messaging.WarehouseProducer[model.Event]) *WarehouseUpdateUseCase {
+func NewWarehouseUpdateUseCase(warehouseBaseUseCase *WarehouseBaseUseCase) *WarehouseUpdateUseCase {
 	return &WarehouseUpdateUseCase{
-		WarehouseBaseUseCase:    warehouseBaseUseCase,
-		WarehouseUpdateProducer: warehouseUpdateProducer,
+		warehouseBaseUseCase,
 	}
 }
 
@@ -51,8 +48,8 @@ func (c *WarehouseUpdateUseCase) Exec(ctx context.Context, request *model.Wareho
 		return nil, fiber.ErrInternalServerError
 	}
 
-	event := converter.WarehouseToEventUpdated(warehouse)
-	if err := c.WarehouseUpdateProducer.SendAsync(event); err != nil {
+	event := converter.WarehouseToEvent(warehouse)
+	if err = c.Producer.Produce(ctx, "shop_created", event); err != nil {
 		c.Log.WithError(err).Error("error publishing contact")
 		return nil, fiber.ErrInternalServerError
 	}

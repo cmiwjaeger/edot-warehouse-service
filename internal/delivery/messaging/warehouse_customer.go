@@ -2,11 +2,12 @@ package messaging
 
 import (
 	"edot-monorepo/services/warehouse-service/internal/entity"
-	"edot-monorepo/shared/events"
+	"edot-monorepo/services/warehouse-service/internal/model/events"
+
 	"encoding/json"
 
-	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/go-playground/validator/v10"
+	"github.com/segmentio/kafka-go"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
@@ -41,7 +42,7 @@ func (c WarehouseConsumer) ConsumeShopCreated(message *kafka.Message) error {
 		c.Log.WithError(err).Error("error insert into db")
 	}
 
-	c.Log.Infof("Received topic  with event: %v from partition %d", event, message.TopicPartition.Partition)
+	c.Log.Infof("Received topic  with event: %v from partition %d", event, message.Topic)
 	return nil
 }
 
@@ -53,7 +54,7 @@ func (c WarehouseConsumer) ConsumeStockChanged(message *kafka.Message) error {
 	}
 
 	// TODO process event
-	c.Log.Infof("Received topic contacts with event: %v from partition %d", event, message.TopicPartition.Partition)
+	c.Log.Infof("Received topic contacts with event: %v from partition %d", event, message.Topic)
 	return nil
 }
 
@@ -77,6 +78,6 @@ func (c WarehouseConsumer) ConsumeShopWarehouseAssigned(message *kafka.Message) 
 		c.Log.WithError(err).Error("error insert into db")
 	}
 
-	c.Log.Infof("Received topic contacts with event: %v from partition %d", event, message.TopicPartition.Partition)
+	c.Log.Infof("Received topic contacts with event: %v from partition %d", event, message.Topic)
 	return nil
 }

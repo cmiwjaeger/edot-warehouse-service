@@ -2,7 +2,7 @@
 
 # Define your Go commands
 build:
-	@go build -o main cmd/web/main.go
+	@env CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o main cmd/web/main.go
 
 run:
 	@go run cmd/web/main.go
