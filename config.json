@@ -22,16 +22,10 @@
     }
   },
   "kafka": {
-    "bootstrap": {
-      "servers": "localhost:9092"
-    },
+    "servers": ["localhost:9092"],
     "group": {
       "id": "edot_warehouse_service"
     },
-    "auto": {
-      "offset": {
-        "reset": "earliest"
-      }
-    }
+    "consumers": ["shop_created"]
   }
 }

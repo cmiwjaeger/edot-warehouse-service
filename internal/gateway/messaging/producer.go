@@ -2,7 +2,7 @@ package messaging
 
 import (
 	"context"
-	"edot-monorepo/services/warehouse-service/internal/model/events"
+	"edot-monorepo/shared/events"
 	"encoding/json"
 
 	"github.com/segmentio/kafka-go"

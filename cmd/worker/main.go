@@ -11,7 +11,6 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/segmentio/kafka-go"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
 
@@ -38,7 +37,7 @@ func main() {
 	// Run the product consumer in a separate goroutine
 	go func() {
 		defer wg.Done()
-		RunWarehouseConsumer(ctx, kafkaReader, logger, db, validate, viperConfig)
+		runConsumer(ctx, kafkaReader, logger, db, validate)
 	}()
 
 	// Wait for context cancellation (signal received)
@@ -50,7 +49,7 @@ func main() {
 	logger.Info("Worker service has shut down gracefully")
 }
 
-func RunWarehouseConsumer(ctx context.Context, reader *kafka.Reader, logger *logrus.Logger, db *gorm.DB, validate *validator.Validate, viperConfig *viper.Viper) {
+func runConsumer(ctx context.Context, reader *kafka.Reader, logger *logrus.Logger, db *gorm.DB, validate *validator.Validate) {
 	logger.Info("setup warehouse consumer")
 	consumer := messaging.NewConsumer(reader)
 	handler := messaging.NewWarehouseConsumer(logger, db, validate)
