@@ -5,7 +5,7 @@ build:
 	@env CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o main cmd/web/main.go
 
 run:
-	@go run cmd/web/main.go
+	@env APP_ENV=LOCAL go run cmd/web/main.go
 
 run-worker:
 	@go run cmd/worker/main.go

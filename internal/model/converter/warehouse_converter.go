@@ -4,6 +4,8 @@ import (
 	"edot-monorepo/services/warehouse-service/internal/entity"
 	"edot-monorepo/services/warehouse-service/internal/model"
 	"edot-monorepo/shared/events"
+
+	"github.com/google/uuid"
 )
 
 func WarehouseToResponse(item *entity.Warehouse) *model.WarehouseResponse {
@@ -18,11 +20,12 @@ func WarehouseToResponse(item *entity.Warehouse) *model.WarehouseResponse {
 
 func WarehouseToEvent(item *entity.Warehouse) *events.WarehouseCreatedEvent {
 	return &events.WarehouseCreatedEvent{
-		ID:        item.ID,
-		Name:      item.Name,
-		Status:    item.Status,
-		CreatedAt: item.CreatedAt,
-		UpdatedAt: item.UpdatedAt,
+		ID:          uuid.New(),
+		WarehouseID: item.ID,
+		Name:        item.Name,
+		Status:      item.Status,
+		CreatedAt:   item.CreatedAt,
+		UpdatedAt:   item.UpdatedAt,
 	}
 }
 

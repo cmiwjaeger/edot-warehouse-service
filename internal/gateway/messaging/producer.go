@@ -28,10 +28,15 @@ func (p *Producer) Produce(ctx context.Context, topic string, event events.Event
 		p.Log.WithError(err).Error("failed to marshal event")
 		return err
 	}
+
 	err = p.Writer.WriteMessages(ctx, kafka.Message{
 		Topic: topic,
 		Key:   []byte(event.GetId()),
 		Value: value,
 	})
+	if err != nil {
+		p.Log.WithError(err).Error("failed WriteMessages event")
+		return err
+	}
 	return
 }

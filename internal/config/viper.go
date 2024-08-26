@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/viper"
 )
@@ -9,7 +10,13 @@ import (
 func NewViper() *viper.Viper {
 	config := viper.New()
 
-	config.SetConfigName("config")
+	if os.Getenv("APP_ENV") == "local" {
+		config.SetConfigName("config")
+	} else {
+		config.SetConfigName("config-local")
+
+	}
+
 	config.SetConfigType("json")
 	config.AddConfigPath("./../")
 	config.AddConfigPath("./")

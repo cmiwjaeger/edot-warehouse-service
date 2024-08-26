@@ -17,6 +17,7 @@ func main() {
 	db := config.NewDatabase(viperConfig, log)
 	validate := config.NewValidator(viperConfig)
 	kafkaReader := config.NewKafkaReader(viperConfig, log)
+	kafkaWriter := config.NewKafkaWriter(viperConfig, log)
 
 	app := config.NewFiber(viperConfig)
 
@@ -27,6 +28,7 @@ func main() {
 		Validate: validate,
 		Config:   viperConfig,
 		Reader:   kafkaReader,
+		Writer:   kafkaWriter,
 	})
 
 	// Start Fiber in a goroutine
